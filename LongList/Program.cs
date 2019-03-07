@@ -17,9 +17,10 @@ namespace LongList
             bool exit = false;
             do
             {
+                SaveList();
                 Console.Clear();
-                readList();
-                Console.WriteLine("Make a selection:\n\t 1.View next page.\n\t 2.Add a task to your list\n\t 3.Mark item as complete or started\n\t 4.Save and Exit Program");
+                ReadList();
+                Console.WriteLine("Make a selection:\n\t 1.View next page.\n\t 2.Add a task to your list\n\t 3.Mark task as complete or started\n\t 4.Exit Program");
                 int choice = int.Parse(Console.ReadLine());
                 switch (choice)
                 {
@@ -29,7 +30,7 @@ namespace LongList
                         break;
                     case 2:
                         Console.Clear();
-                        myList.Add((addToList(), true));
+                        myList.Add((AddToList(), true));
                         break;
                     case 3:
                         SelectComOrStarted();
@@ -42,7 +43,6 @@ namespace LongList
                         break;
                 }
             } while (!exit);
-            saveList();
         }
 
 
@@ -73,7 +73,7 @@ namespace LongList
                 {
 
                     Console.Clear();
-                    readList();
+                    ReadList();
                     Console.WriteLine("Choose:");
                     Console.WriteLine("\t 1.Mark a task on your list as complete.");
                     Console.WriteLine("\t 2.Mark a task as started \"will mark task as complete and reenter it at\n\t the bottom of your list\"");
@@ -82,7 +82,7 @@ namespace LongList
                     if (choice == 1)
                     {
                         Console.Clear();
-                        readList();
+                        ReadList();
                         Console.WriteLine("Choose the corresponding number to the task you would like to mark as complete");
                         int markedComplete = int.Parse(Console.ReadLine());
                         myList[(markedComplete) - 1] = (myList[(markedComplete) - 1].Item1, false);
@@ -90,7 +90,7 @@ namespace LongList
                     else if (choice == 2)
                     {
                         Console.Clear();
-                        readList();
+                        ReadList();
                         Console.WriteLine("Choose the corresponding number to the task you would like mark as started\n\"Will mark orinigal as complete and then readd it to the bottom of the list\"");
                         int markedComplete = int.Parse(Console.ReadLine());
                         myList[(markedComplete) - 1] = (myList[(markedComplete) - 1].Item1, false);
@@ -115,7 +115,7 @@ namespace LongList
             } while (z == 0);
         }
 
-        static string addToList()
+        static string AddToList()
         {
             string addTask = "";
             bool exit = false;
@@ -132,12 +132,7 @@ namespace LongList
             return addTask;                
         }
 
-
-
-
-
-
-        static void readList()
+        static void ReadList()
         {
             Console.WriteLine("Completed task are Highlighted in grey");
             Console.WriteLine("My List");
@@ -150,14 +145,14 @@ namespace LongList
             }
         }
 
-        static void saveList()
+        static void SaveList()
         {
-
+            string path = @"SimpleScanningList.txt";
+            File.WriteAllText(path, String.Empty);
             try
             {
                 for (int i = 0; i < myList.Count; i++)
                 {
-                    string path = @"SimpleScanningList.txt";
                     string appendText = myList[i].Item1 + "," + myList[i].Item2 + Environment.NewLine;
                     File.AppendAllText(path, appendText);
                 }
@@ -186,8 +181,7 @@ namespace LongList
                 file.Close();
             }
             catch (FileNotFoundException) {; }
-
-            // File.WriteAllText(path, String.Empty);
+            File.WriteAllText(path, String.Empty);
         }
     }
 }
