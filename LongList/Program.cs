@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace LongList
 {
     class Program
     {
+        
         static List<(string, bool)> myList = new List<(string, bool)>();
 
         static void Main(string[] args)
@@ -16,17 +18,19 @@ namespace LongList
             ReadFile();
             bool exit = false;
             do
-            {
+            {                                
                 SaveList();
-                Console.Clear();
+                Console.Clear(); 
                 ReadList();
-                Console.WriteLine("Make a selection:\n\t 1.View next page.\n\t 2.Add a task to your list\n\t 3.Mark task as complete or started\n\t 4.Exit Program");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n1.View next page.\t 2.Add a task to your list\t 3.Mark task as complete or started\t 4.Exit Program");
+                Console.ResetColor();
                 int choice = int.Parse(Console.ReadLine());
                 switch (choice)
                 {
                     case 1:
                         Console.Clear();
-
+                        ReadListOne();
                         break;
                     case 2:
                         Console.Clear();
@@ -41,14 +45,9 @@ namespace LongList
                     default:
                         exit = true;
                         break;
-                }
+                }            
             } while (!exit);
         }
-
-
-
-
-
 
         static void ChangeColor(int i)
         {
@@ -108,41 +107,27 @@ namespace LongList
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Input not allowed");
+                    Console.WriteLine("Input not allowed\n Press enter to continue");
                     Console.ReadKey();
-                    z = 1;
+                   
                 }
             } while (z == 0);
         }
 
         static string AddToList()
-        {
+        {     
             string addTask = "";
             bool exit = false;
             do       
             {    
-                    Console.WriteLine("What would you like to add to your list?");
-                    addTask = ($"{Console.ReadLine()}");
-                    Console.WriteLine($"You entered\"{addTask}\" ");
-                    Console.WriteLine("Enter Y if youd like to add this to list, Enter N if youd like to reenter your task");
-                    string reEnter = Console.ReadLine();
-                    exit = !(reEnter == "N");
-                              
+                Console.WriteLine("What would you like to add to your list?");
+                addTask = ($"{Console.ReadLine()}");
+                Console.WriteLine($"You entered\"{addTask}\" ");
+                Console.WriteLine("Enter Y if youd like to add this to list, Enter N if youd like to reenter your task");
+                string reEnter = Console.ReadLine();
+                exit = !(reEnter == "N");                              
             } while (!exit);
-            return addTask;                
-        }
-
-        static void ReadList()
-        {
-            Console.WriteLine("Completed task are Highlighted in grey");
-            Console.WriteLine("My List");
-            Console.WriteLine("===================");
-            for (int i = 0; i < myList.Count; i++)
-            {
-                ChangeColor(i);
-                Console.WriteLine($"{i + 1}. {myList[i].Item1}");
-                Console.ResetColor();
-            }
+            return addTask;                                           
         }
 
         static void SaveList()
@@ -183,5 +168,49 @@ namespace LongList
             catch (FileNotFoundException) {; }
             File.WriteAllText(path, String.Empty);
         }
+
+        static void ReadList()
+        {
+             Console.ForegroundColor = ConsoleColor.Blue;               
+            Console.WriteLine("My List     \"Completed task are Highlighted in gray\"");
+            Console.WriteLine("===================================");
+            Console.ResetColor();
+            for (int i = 0; i < 25; i++)
+            {
+                ChangeColor(i);     
+                Console.WriteLine($"{i + 1}. {myList[i].Item1}");
+                Console.ResetColor();
+            }
+        }
+           
+           
+
+        static void ReadListOne()
+        {
+            
+            Console.WriteLine("Completed task are Highlighted in grey");
+            Console.WriteLine("My List      \"Completed task are Highlighted in grey\"");
+            Console.WriteLine("===================");
+            for (int i = 25; i < (myList.Count); i++)
+            {
+                ChangeColor(i);     
+                Console.WriteLine($"{i + 1}. {myList[i].Item1}");
+                Console.ResetColor();
+            }
+            Console.ReadLine();
+        }
+
+        static void ReadNextList()
+        {
+            ReadListOne();
+        }
+
+
+
+        
+        
+
     }
 }
+
+
