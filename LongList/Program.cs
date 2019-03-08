@@ -15,31 +15,39 @@ namespace LongList
 
         static void Main(string[] args)
         {
+            Console.SetWindowSize(Console.WindowWidth,50);
             ReadFile();
             bool exit = false;
+            int a = 0;
             do
             {                                
                 SaveList();
                 Console.Clear(); 
-                ReadList();
+                StartIndex(a);
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n1.View next page.\t 2.Add a task to your list\t 3.Mark task as complete or started\t 4.Exit Program");
+                Console.WriteLine("1.View next page.\t 2.Add a task to your list\t 3.Mark task as complete or started\n4.PreviousPage\t\t 5.Back to first page\t\t 6.Exit Program");
                 Console.ResetColor();
                 int choice = int.Parse(Console.ReadLine());
                 switch (choice)
                 {
                     case 1:
                         Console.Clear();
-                        ReadListOne();
+                        a = NextPage(a);
                         break;
                     case 2:
                         Console.Clear();
                         myList.Add((AddToList(), true));
                         break;
                     case 3:
-                        SelectComOrStarted();
+                        SelectComOrStarted(a);
                         break;
-                    case 4:
+                    case 4:                       
+                        a = PreviousPage(a);
+                        break;
+                    case 5:
+                        a = 0;
+                        break;
+                    case 6:
                         exit = true;
                         break;
                     default:
@@ -48,7 +56,7 @@ namespace LongList
                 }            
             } while (!exit);
         }
-
+        //Changes True to gray:False to DarkGray
         static void ChangeColor(int i)
         {
             if ((myList[i].Item2) == true)
@@ -62,44 +70,43 @@ namespace LongList
             }
 
         }
-
-        static void SelectComOrStarted()
+        //Turns task tuple to false
+        static void SelectComOrStarted(int index)
         {
             int z = 0;
             do
             {
                 try
                 {
-
                     Console.Clear();
-                    ReadList();
+                    StartIndex(index);
                     Console.WriteLine("Choose:");
                     Console.WriteLine("\t 1.Mark a task on your list as complete.");
                     Console.WriteLine("\t 2.Mark a task as started \"will mark task as complete and reenter it at\n\t the bottom of your list\"");
                     Console.WriteLine("\t 3.Exit back to main menu");
-                    int choice = int.Parse(Console.ReadLine());
-                    if (choice == 1)
+                    int choice = int.Parse(Console.ReadLine());   
+                    if (choice == 1) //Changes to just Dark Gray
                     {
                         Console.Clear();
-                        ReadList();
+                        StartIndex(index);
                         Console.WriteLine("Choose the corresponding number to the task you would like to mark as complete");
                         int markedComplete = int.Parse(Console.ReadLine());
                         myList[(markedComplete) - 1] = (myList[(markedComplete) - 1].Item1, false);
                     }
-                    else if (choice == 2)
+                    else if (choice == 2) //Changes to Dark Gray and adds it to list
                     {
                         Console.Clear();
-                        ReadList();
+                        StartIndex(index);
                         Console.WriteLine("Choose the corresponding number to the task you would like mark as started\n\"Will mark orinigal as complete and then readd it to the bottom of the list\"");
                         int markedComplete = int.Parse(Console.ReadLine());
                         myList[(markedComplete) - 1] = (myList[(markedComplete) - 1].Item1, false);
                         myList.Add((myList[(markedComplete) - 1].Item1, true));
                     }
-                    else if (choice == 3)
+                    else if (choice == 3) //Will exit to menu
                     {
                         z = 1;
                     }
-                    else
+                    else //Rerun loop
                     {
                         z = 0;
                     }
@@ -113,7 +120,7 @@ namespace LongList
                 }
             } while (z == 0);
         }
-
+        //Adds Task to List
         static string AddToList()
         {     
             string addTask = "";
@@ -129,7 +136,7 @@ namespace LongList
             } while (!exit);
             return addTask;                                           
         }
-
+        //Saves list to file
         static void SaveList()
         {
             string path = @"SimpleScanningList.txt";
@@ -148,7 +155,7 @@ namespace LongList
                 Console.ReadKey();
             }
         }
-
+        //Reads List from File
         static void ReadFile()
         {
             string path = @"SimpleScanningList.txt";
@@ -169,48 +176,38 @@ namespace LongList
             File.WriteAllText(path, String.Empty);
         }
 
-        static void ReadList()
-        {
-             Console.ForegroundColor = ConsoleColor.Blue;               
-            Console.WriteLine("My List     \"Completed task are Highlighted in gray\"");
-            Console.WriteLine("===================================");
-            Console.ResetColor();
-            for (int i = 0; i < 25; i++)
-            {
-                ChangeColor(i);     
-                Console.WriteLine($"{i + 1}. {myList[i].Item1}");
-                Console.ResetColor();
-            }
-        }
-           
-           
-
-        static void ReadListOne()
-        {
-            
+        //Creates forward and previous page.
+         static void StartIndex(int startAtNumber)
+         {
             Console.WriteLine("Completed task are Highlighted in grey");
             Console.WriteLine("My List      \"Completed task are Highlighted in grey\"");
             Console.WriteLine("===================");
-            for (int i = 25; i < (myList.Count); i++)
-            {
+            int Counter;          
+            Counter=((myList.Count) >= (startAtNumber + 25)) ? (startAtNumber + 25) :(myList.Count);
+                for (int i = startAtNumber; i < Counter; i++)
+                {
                 ChangeColor(i);     
                 Console.WriteLine($"{i + 1}. {myList[i].Item1}");
                 Console.ResetColor();
-            }
-            Console.ReadLine();
-        }
-
-        static void ReadNextList()
-        {
-            ReadListOne();
-        }
-
-
-
-        
-        
+                }                
+         } 
+    //Next Page;Next 25
+    static int NextPage(int b)
+    {    
+         b = b + 25;
+        if(b > myList.Count) b=b-25;
+        return b;
+    }
+    //Previous page;Last 25
+    static int PreviousPage(int c)
+    {
+        c = c - 25;
+        if(c < 0) c=0;
+        return c;
+    }
 
     }
 }
 
 
+         
