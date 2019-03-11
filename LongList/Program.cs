@@ -23,6 +23,7 @@ namespace LongList
             {                                
                 SaveList();
                 Console.Clear(); 
+                DeleteFirst();
                 StartIndex(a);
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("1.View next page.\t 2.Add a task to your list\t 3.Mark task as complete or started\n4.PreviousPage\t\t 5.Back to first page\t\t 6.Exit Program");
@@ -56,20 +57,8 @@ namespace LongList
                 }            
             } while (!exit);
         }
-        //Changes True to gray:False to DarkGray
-        static void ChangeColor(int i)
-        {
-            if ((myList[i].Item2) == true)
-            {
-                Console.ForegroundColor = ConsoleColor.Gray;
 
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-            }
 
-        }
         //Turns task tuple to false
         static void SelectComOrStarted(int index)
         {
@@ -106,7 +95,7 @@ namespace LongList
                     {
                         z = 1;
                     }
-                    else //Rerun loop
+                    else //Return loop
                     {
                         z = 0;
                     }
@@ -167,10 +156,10 @@ namespace LongList
                 while (!file.EndOfStream)
                 {
                     string stringSeperator = file.ReadLine();
-                    string[] stringSeparators = stringSeperator.Split(new char[] { ',' });
+                    string[] stringSeparators = stringSeperator.Split(new char[] { ',' });              //Splits 2 items to (string, bool)
                     myList.Add((stringSeparators[0], bool.Parse(stringSeparators[1])));
                 }
-                file.Close();
+                file.Close(); //program will close file to save to the file.
             }
             catch (FileNotFoundException) {; }
             File.WriteAllText(path, String.Empty);
@@ -205,6 +194,39 @@ namespace LongList
         if(c < 0) c=0;
         return c;
     }
+
+        //Changes True to gray:False to DarkGray
+        static void ChangeColor(int i)
+        {
+            if ((myList[i].Item2) == true)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+            }
+
+        }
+
+         static void DeleteFirst()
+        {
+            do
+            {
+                
+            if(myList[0].Item2 == false)
+            {
+            myList.RemoveAt(0);          
+            }
+            
+            }while(myList[0].Item2 == false);
+        }
+
+
+
+
+
 
     }
 }
